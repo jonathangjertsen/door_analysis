@@ -15,3 +15,5 @@ Skaff en Python 3-distribusjon med matplotlib og numpy. Anaconda er bra. Tror ka
 For å plotte alt samtidig, kjør `python door_plots.py`.
 
 For å gjøre noe annet enn det, importer `door_stats.py` eller `door_plots.py` i et nytt skript og hent ut det du trenger
+
+![plot](door_plots.png])
