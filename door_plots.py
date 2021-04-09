@@ -1,4 +1,4 @@
-from matplotlib import axes as Axes, pyplot as plt, rcParams
+from matplotlib import axes as Axes, pyplot as plt, rcParams, checkdep_usetex
 from matplotlib.dates import MonthLocator, DateFormatter
 from numpy import exp, linspace, log, polyfit, sqrt
 
@@ -208,8 +208,8 @@ if __name__ == "__main__":
     # Get data
     data = list(get_rows())
 
-    # Use LaTeX rendering
-    rcParams['text.usetex'] = True
+    # Use LaTeX rendering if available
+    rcParams['text.usetex'] = checkdep_usetex(True)
 
     # Plot
     plot_all(data)
