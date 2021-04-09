@@ -1,8 +1,23 @@
+from functools import lru_cache
+
 from matplotlib import axes as Axes, pyplot as plt, rcParams, checkdep_usetex
 from matplotlib.dates import MonthLocator, DateFormatter
 from numpy import exp, linspace, log, polyfit, sqrt
 
 from door_stats import *
+
+
+@lru_cache()
+def is_tex_available():
+    return checkdep_usetex(True)
+
+
+@lru_cache()
+def percent():
+    """
+    Ensure percent sign is escaped iff tex is available
+    """
+    return r"\%" if is_tex_available() else "%"
 
 
 def plot_openness_by_hour(data: list, period: dict, ax: Axes):
@@ -26,8 +41,8 @@ def plot_openness_by_hour(data: list, period: dict, ax: Axes):
     ax.yaxis.grid(True, which="both", linestyle="-.")
     ax.set_xlim(1, num_hrs)
     ax.set_xticks(range(num_hrs + 1))
-    ax.set_xticklabels(["{:02d}".format(t) for t in ax.get_xticks()])
-    ax.set_yticklabels(["{:.1f}\%".format(o * 100) for o in ax.get_yticks()])
+    ax.set_xticklabels([f"{t:02d}" for t in ax.get_xticks()])
+    ax.set_yticklabels([f"{o * 100:.1f}{percent()}" for o in ax.get_yticks()])
     ax.set_ylabel("p", rotation=0)
     ax.set_xlabel("Tid på døgnet")
 
@@ -50,7 +65,7 @@ def plot_openness(data: list, period: dict, ax: Axes):
     # Decorate axes
     ax.xaxis.set_major_locator(MonthLocator((1, 4, 7, 10), bymonthday=1))
     ax.xaxis.set_major_formatter(DateFormatter("%b '%y"))
-    ax.set_yticklabels(["{:.0f}\%".format(o * 100) for o in ax.get_yticks()])
+    ax.set_yticklabels([f"{o * 100:.0f}{percent()}" for o in ax.get_yticks()])
     ax.set_ylabel("p", rotation=0)
     ax.grid(linestyle="-.")
 
@@ -75,12 +90,12 @@ def plot_openness_by_weekday(data: list, period: dict, ax: Axes):
     ax.text(
         2,
         weekday_avg * 1.05,
-        "Gjennomsnitt ukedager: {:.0f}\%".format(weekday_avg * 100),
+        f"Gjennomsnitt ukedager: {weekday_avg * 100:.0f}{percent()}",
     )
     ax.text(
         4.5,
         weekend_avg * 1.1,
-        "Gjennomsnitt helgedager: {:.0f}\%".format(weekend_avg * 100),
+        f"Gjennomsnitt helgedager: {weekend_avg * 100:.0f}{percent()}",
     )
     ax.plot((0, 5 - 1), (weekday_avg, weekday_avg), "k--")
     ax.plot((5, 7 - 1), (weekend_avg, weekend_avg), "k--")
@@ -90,7 +105,7 @@ def plot_openness_by_weekday(data: list, period: dict, ax: Axes):
         ("", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag")
     )
     ax.set_yticklabels(
-        ["{:.1f}\%".format(openness * 100) for openness in ax.get_yticks()]
+        [f"{openness * 100:.1f}{percent()}" for openness in ax.get_yticks()]
     )
     ax.set_ylabel("p", rotation=0)
 
@@ -129,7 +144,7 @@ def plot_openness_by_weekday_by_semester(period: dict, ax: Axes):
         )
 
         # Add to legend
-        legend.append("{} {}".format(cur_semester, cur_year))
+        legend.append(f"{cur_semester} {cur_year}")
 
         # Update semester and year for next bars
         if cur_semester == "Høst":
@@ -142,7 +157,7 @@ def plot_openness_by_weekday_by_semester(period: dict, ax: Axes):
     ax.legend(legend, loc="lower right")
     ax.set_xticklabels(("", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag"))
     ax.set_yticklabels(
-        ["{:.1f}\%".format(openness * 100) for openness in ax.get_yticks()]
+        [f"{openness * 100:.1f}{percent()}" for openness in ax.get_yticks()]
     )
     ax.set_ylabel("p", rotation=0)
 
@@ -230,7 +245,7 @@ if __name__ == "__main__":
     data = list(get_rows())
 
     # Use LaTeX rendering if available
-    rcParams["text.usetex"] = checkdep_usetex(True)
+    rcParams["text.usetex"] = is_tex_available()
 
     # Plot
     plot_all(data)
