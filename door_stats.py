@@ -4,6 +4,7 @@ This module does door statistics.
 from csv import reader
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from functools import lru_cache
 from os.path import dirname, realpath
 from types import GeneratorType
 
@@ -27,24 +28,27 @@ def limit_filter_func(start, stop):
     return lambda _, timestamp: start < timestamp < stop
 
 
+@lru_cache()
+def get_all_rows() -> list:
+    """
+    Returns all rows as a list of (status, datetime) tuples
+    """
+    with open(DOOR_CSV_PATH, "r") as file:
+        csv_reader = reader(file, delimiter=",")
+        return [
+            (int(row[STATUS]), datetime.strptime(row[TS], DATETIME_FMT))
+            for row in csv_reader
+        ]
+
+
 def get_rows(filter_func: callable = None) -> GeneratorType:
     """
     Reads door.csv and returns a generator which yields the data one by one.
 
     Call list(get_rows()) to get the whole thing as a list.
     """
-    with open(DOOR_CSV_PATH, "r") as file:
-        csv_reader = reader(file, delimiter=",")
-        for row in csv_reader:
-            # Convert row to int and datetime objects
-            status = int(row[STATUS])
-            timestamp = datetime.strptime(row[TS], DATETIME_FMT)
-
-            # Optional filtering
-            if filter_func is not None and not filter_func(status, timestamp):
-                continue
-
-            # Yield the row
+    for status, timestamp in get_all_rows():
+        if filter_func is None or filter_func(status, timestamp):
             yield status, timestamp
 
 
