@@ -210,7 +210,6 @@ if __name__ == "__main__":
 
     # Use LaTeX rendering
     rcParams['text.usetex'] = True
-    rcParams['text.latex.unicode'] = True
 
     # Plot
     plot_all(data)
