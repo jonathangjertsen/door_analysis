@@ -151,7 +151,7 @@ def plot_openness_by_weekday_by_semester(period: dict, ax: Axes):
             cur_semester = "Vår"
             cur_year += 1
         else:
-            cur_semester = "Vår"
+            cur_semester = "Høst"
 
     # Place legend and labels
     ax.legend(legend, loc="lower right")
