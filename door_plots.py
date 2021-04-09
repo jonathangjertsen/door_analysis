@@ -209,7 +209,7 @@ def plot_all(data: list):
     :return: None
     """
     # Config
-    plt.figure(figsize=(20, 10))
+    plt.figure(figsize=(15, 8))
     grid_shape = (3, 2)
     fine_grained_sampling_period = {"minutes": 1}
 
