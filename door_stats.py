@@ -19,13 +19,15 @@ OPEN = 1
 DOOR_CSV_PATH = dirname(realpath(__file__)) + "/door.csv"
 DATETIME_FMT = "%Y-%m-%d %H:%M:%S"
 
+
 def limit_filter_func(start, stop):
     """
     Returns a function which filters the data by date.
     """
     return lambda _, timestamp: start < timestamp < stop
 
-def get_rows(filter_func: callable=None) -> GeneratorType:
+
+def get_rows(filter_func: callable = None) -> GeneratorType:
     """
     Reads door.csv and returns a generator which yields the data one by one.
 
@@ -44,6 +46,7 @@ def get_rows(filter_func: callable=None) -> GeneratorType:
 
             # Yield the row
             yield status, timestamp
+
 
 def get_openness(data: list, period: dict) -> (list, list):
     """

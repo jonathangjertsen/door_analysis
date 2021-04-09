@@ -4,6 +4,7 @@ from numpy import exp, linspace, log, polyfit, sqrt
 
 from door_stats import *
 
+
 def plot_openness_by_hour(data: list, period: dict, ax: Axes):
     """
     Plots the openness by hour from the raw data.
@@ -49,7 +50,7 @@ def plot_openness(data: list, period: dict, ax: Axes):
     # Decorate axes
     ax.xaxis.set_major_locator(MonthLocator((1, 4, 7, 10), bymonthday=1))
     ax.xaxis.set_major_formatter(DateFormatter("%b '%y"))
-    ax.set_yticklabels(["{:.0f}\%".format(o*100) for o in ax.get_yticks()])
+    ax.set_yticklabels(["{:.0f}\%".format(o * 100) for o in ax.get_yticks()])
     ax.set_ylabel("p", rotation=0)
     ax.grid(linestyle="-.")
 
@@ -64,21 +65,33 @@ def plot_openness_by_weekday(data: list, period: dict, ax: Axes):
     :return: None
     """
     week_bins = get_openness_by_weekday(data, period)
-    weekday_avg = sum(week_bins[0:5])/5
-    weekend_avg = sum(week_bins[5:7])/2
+    weekday_avg = sum(week_bins[0:5]) / 5
+    weekend_avg = sum(week_bins[5:7]) / 2
 
     # Plot bar
     ax.bar(range(7), week_bins)
 
     # Plot averages
-    ax.text(2, weekday_avg * 1.05, "Gjennomsnitt ukedager: {:.0f}\%".format(weekday_avg*100))
-    ax.text(4.5, weekend_avg * 1.1, "Gjennomsnitt helgedager: {:.0f}\%".format(weekend_avg*100))
-    ax.plot((0, 5-1), (weekday_avg, weekday_avg), 'k--')
-    ax.plot((5, 7-1), (weekend_avg, weekend_avg), 'k--')
+    ax.text(
+        2,
+        weekday_avg * 1.05,
+        "Gjennomsnitt ukedager: {:.0f}\%".format(weekday_avg * 100),
+    )
+    ax.text(
+        4.5,
+        weekend_avg * 1.1,
+        "Gjennomsnitt helgedager: {:.0f}\%".format(weekend_avg * 100),
+    )
+    ax.plot((0, 5 - 1), (weekday_avg, weekday_avg), "k--")
+    ax.plot((5, 7 - 1), (weekend_avg, weekend_avg), "k--")
 
     # Decorate axes
-    ax.set_xticklabels(("", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"))
-    ax.set_yticklabels(["{:.1f}\%".format(openness * 100) for openness in ax.get_yticks()])
+    ax.set_xticklabels(
+        ("", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag")
+    )
+    ax.set_yticklabels(
+        ["{:.1f}\%".format(openness * 100) for openness in ax.get_yticks()]
+    )
     ax.set_ylabel("p", rotation=0)
 
 
@@ -107,9 +120,12 @@ def plot_openness_by_weekday_by_semester(period: dict, ax: Axes):
     for semester_index, week_bins in enumerate(dataseries):
         # Add bars
         ax.bar(
-            [weekday_index + semester_index * bar_width for weekday_index in range(num_weekdays)],
+            [
+                weekday_index + semester_index * bar_width
+                for weekday_index in range(num_weekdays)
+            ],
             height=week_bins[:num_weekdays],
-            width=bar_width
+            width=bar_width,
         )
 
         # Add to legend
@@ -123,9 +139,11 @@ def plot_openness_by_weekday_by_semester(period: dict, ax: Axes):
             cur_semester = "Vår"
 
     # Place legend and labels
-    ax.legend(legend, loc='lower right')
+    ax.legend(legend, loc="lower right")
     ax.set_xticklabels(("", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag"))
-    ax.set_yticklabels(["{:.1f}\%".format(openness * 100) for openness in ax.get_yticks()])
+    ax.set_yticklabels(
+        ["{:.1f}\%".format(openness * 100) for openness in ax.get_yticks()]
+    )
     ax.set_ylabel("p", rotation=0)
 
 
@@ -155,8 +173,8 @@ def plot_visit_durations(data: list, ax: Axes):
     lin_fitting_bins = [b + bin_width / 2 for b in bins[fit_start:fit_stop]]
     lin_fitting_n = n[fit_start:fit_stop]
     [a, b] = polyfit(lin_fitting_bins, log(lin_fitting_n), 1, w=sqrt(lin_fitting_n))
-    fitted_n = [exp(b + a*t) for t in lin_fitting_bins]
-    regression_line_opts = { "linestyle": "--", "color": "black", "linewidth": 2 }
+    fitted_n = [exp(b + a * t) for t in lin_fitting_bins]
+    regression_line_opts = {"linestyle": "--", "color": "black", "linewidth": 2}
     regression_label_text = "y={:.0f}exp({:.6f}*t)".format(exp(b), a)
     regression_label_coords = (max_visit_s * 0.6, max(n) * 0.5)
     ax.plot(lin_fitting_bins, fitted_n, **regression_line_opts)
@@ -166,6 +184,7 @@ def plot_visit_durations(data: list, ax: Axes):
     ax.set_xlabel("Varighet for visitt (s)")
     ax.set_ylabel("Andel visitter (vilkårlig)")
     ax.set_yscale("log")
+
 
 def plot_all(data: list):
     """
@@ -177,11 +196,11 @@ def plot_all(data: list):
     # Config
     plt.figure(figsize=(20, 10))
     grid_shape = (3, 2)
-    fine_grained_sampling_period = { "minutes": 1 }
+    fine_grained_sampling_period = {"minutes": 1}
 
     # Openness by week for the entire period
     openness_ax = plt.subplot2grid(grid_shape, (0, 0), colspan=2)
-    plot_openness(data, { "days": 7 }, openness_ax)
+    plot_openness(data, {"days": 7}, openness_ax)
 
     # Openness by hour for the entire period
     openness_by_hour_ax = plt.subplot2grid(grid_shape, (1, 0))
@@ -197,7 +216,9 @@ def plot_all(data: list):
 
     # Openness by weekday by semester
     openness_by_weekday_by_semester_ax = plt.subplot2grid(grid_shape, (2, 1))
-    plot_openness_by_weekday_by_semester(fine_grained_sampling_period, openness_by_weekday_by_semester_ax)
+    plot_openness_by_weekday_by_semester(
+        fine_grained_sampling_period, openness_by_weekday_by_semester_ax
+    )
 
     # Show the plot
     plt.tight_layout()
@@ -209,7 +230,7 @@ if __name__ == "__main__":
     data = list(get_rows())
 
     # Use LaTeX rendering if available
-    rcParams['text.usetex'] = checkdep_usetex(True)
+    rcParams["text.usetex"] = checkdep_usetex(True)
 
     # Plot
     plot_all(data)
