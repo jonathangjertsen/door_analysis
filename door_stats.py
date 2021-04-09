@@ -188,8 +188,9 @@ def get_openness_by_semester(period: dict):
     semesters = []
     while cur_start < stop:
         # Get openness for the semester
-        rows = get_rows(limit_filter_func(cur_start, cur_stop))
-        semesters.append(get_openness(list(rows), period))
+        rows = list(get_rows(limit_filter_func(cur_start, cur_stop)))
+        if rows:
+            semesters.append(get_openness(rows, period))
 
         # Update start and stop to next semester
         cur_start = cur_stop
