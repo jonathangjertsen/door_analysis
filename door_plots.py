@@ -43,7 +43,7 @@ def plot_openness_by_hour(data: list, period: dict, ax: Axes):
     ax.set_xticks(range(num_hrs + 1))
     ax.set_xticklabels([f"{t:02d}" for t in ax.get_xticks()])
     ax.set_yticklabels([f"{o * 100:.1f}{percent()}" for o in ax.get_yticks()])
-    ax.set_ylabel("p", rotation=0)
+    ax.set_ylabel("Andel åpen")
     ax.set_xlabel("Tid på døgnet")
 
 
@@ -66,7 +66,7 @@ def plot_openness(data: list, period: dict, ax: Axes):
     ax.xaxis.set_major_locator(MonthLocator((1, 4, 7, 10), bymonthday=1))
     ax.xaxis.set_major_formatter(DateFormatter("%b '%y"))
     ax.set_yticklabels([f"{o * 100:.0f}{percent()}" for o in ax.get_yticks()])
-    ax.set_ylabel("p", rotation=0)
+    ax.set_ylabel("Andel åpen")
     ax.grid(linestyle="-.")
 
 
@@ -107,7 +107,7 @@ def plot_openness_by_weekday(data: list, period: dict, ax: Axes):
     ax.set_yticklabels(
         [f"{openness * 100:.1f}{percent()}" for openness in ax.get_yticks()]
     )
-    ax.set_ylabel("p", rotation=0)
+    ax.set_ylabel("Andel åpen")
 
 
 def plot_openness_by_weekday_by_semester(period: dict, ax: Axes):
@@ -159,7 +159,7 @@ def plot_openness_by_weekday_by_semester(period: dict, ax: Axes):
     ax.set_yticklabels(
         [f"{openness * 100:.1f}{percent()}" for openness in ax.get_yticks()]
     )
-    ax.set_ylabel("p", rotation=0)
+    ax.set_ylabel("Andel åpen")
 
 
 def plot_visit_durations(data: list, ax: Axes):
