@@ -107,7 +107,7 @@ def plot_openness_by_weekday_by_semester(period: dict, ax: Axes):
     for semester_index, week_bins in enumerate(dataseries):
         # Add bars
         ax.bar(
-            left=[weekday_index + semester_index * bar_width for weekday_index in range(num_weekdays)],
+            [weekday_index + semester_index * bar_width for weekday_index in range(num_weekdays)],
             height=week_bins[:num_weekdays],
             width=bar_width
         )
