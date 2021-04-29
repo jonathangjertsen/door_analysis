@@ -1,0 +1,16 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: numpy
+    versions:
+    - "> 1.12.1"
+  - dependency-name: matplotlib
+    versions:
+    - 3.3.4
+    - 3.4.0
+    - 3.4.1
